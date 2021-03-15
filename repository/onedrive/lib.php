@@ -456,14 +456,14 @@ class repository_onedrive extends repository {
         $options = ['filepath' => $path, 'timeout' => $CFG->repositorygetfiletimeout, 'followlocation' => true, 'maxredirs' => 5];
         $result = $client->download_one($source, null, $options);
 
-        if ($result) {
-            @chmod($path, $CFG->filepermissions);
-            return array(
-                'path' => $path,
-                'url' => $reference
-            );
+        if ($result !== true) {
+            throw new repository_exception('cannotdownload', 'repository');
         }
-        throw new repository_exception('cannotdownload', 'repository');
+        @chmod($path, $CFG->filepermissions);
+        return array(
+            'path' => $path,
+            'url' => $reference
+        );
     }
 
     /**
@@ -887,7 +887,7 @@ class repository_onedrive extends repository {
 
         $result = $userauth->download_one($sourceurl, null, $options);
 
-        if (!$result) {
+        if ($result !== true) {
             throw new repository_exception('cannotdownload', 'repository');
         }
 
