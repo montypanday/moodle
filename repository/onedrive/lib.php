@@ -453,7 +453,7 @@ class repository_onedrive extends repository {
 
         // We use download_one and not the rest API because it has special timeouts etc.
         $path = $this->prepare_file($filename);
-        $options = ['filepath' => $path, 'timeout' => 15, 'followlocation' => true, 'maxredirs' => 5];
+        $options = ['filepath' => $path, 'timeout' => $CFG->repositorygetfiletimeout, 'followlocation' => true, 'maxredirs' => 5];
         $result = $client->download_one($source, null, $options);
 
         if ($result) {
@@ -880,7 +880,7 @@ class repository_onedrive extends repository {
         $tmpfilename = clean_param($source->id, PARAM_PATH);
         $temppath = make_request_directory() . $tmpfilename;
 
-        $options = ['filepath' => $temppath, 'timeout' => 60, 'followlocation' => true, 'maxredirs' => 5];
+        $options = ['filepath' => $temppath, 'timeout' => $CFG->repositorygetfiletimeout, 'followlocation' => true, 'maxredirs' => 5];
         $base = 'https://graph.microsoft.com/v1.0/';
         $sourceurl = new moodle_url($base . 'me/drive/items/' . $source->id . '/content');
         $sourceurl = $sourceurl->out(false);
