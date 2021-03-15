@@ -494,7 +494,7 @@ class repository_googledocs extends repository {
 
         // We use download_one and not the rest API because it has special timeouts etc.
         $path = $this->prepare_file($filename);
-        $options = ['filepath' => $path, 'timeout' => 15, 'followlocation' => true, 'maxredirs' => 5];
+        $options = ['filepath' => $path, 'timeout' => $CFG->repositorygetfiletimeout, 'followlocation' => true, 'maxredirs' => 5];
         $success = $client->download_one($source, null, $options);
 
         if ($success) {
