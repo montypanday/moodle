@@ -886,6 +886,7 @@ function clean_param($param, $type) {
 
         case PARAM_TEXT:
             // Leave only tags needed for multilang.
+            $param = trim($param);
             $param = fix_utf8($param);
             // If the multilang syntax is not correct we strip all tags because it would break xhtml strict which is required
             // for accessibility standards please note this cleaning does not strip unbalanced '>' for BC compatibility reasons.
