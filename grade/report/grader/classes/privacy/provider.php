@@ -60,6 +60,7 @@ class provider implements
         $items->add_user_preference('grade_report_showactivityicons', 'privacy:metadata:preference:grade_report_showactivityicons');
         $items->add_user_preference('grade_report_showranges', 'privacy:metadata:preference:grade_report_showranges');
         $items->add_user_preference('grade_report_showanalysisicon', 'privacy:metadata:preference:grade_report_showanalysisicon');
+        $items->add_user_preference('grade_report_showlastgradedate', 'privacy:metadata:preference:grade_report_showlastgradedate');
         // Special rows preferences.
         $items->add_user_preference('grade_report_rangesdisplaytype', 'privacy:metadata:preference:grade_report_rangesdisplaytype');
         $items->add_user_preference('grade_report_rangesdecimalpoints', 'privacy:metadata:preference:grade_report_rangesdecimalpoints');
@@ -99,6 +100,7 @@ class provider implements
                 case 'grade_report_showlocks':
                 case 'grade_report_showuserimage':
                 case 'grade_report_showactivityicons':
+                case 'grade_report_showlastgradedate':
                 case 'grade_report_showranges':
                 case 'grade_report_showanalysisicon':
                 case 'grade_report_shownumberofgrades':

@@ -665,7 +665,9 @@ class grade_report_grader extends grade_report {
 
         $arrows = $this->get_sort_arrows($extrafields);
 
-        $colspan = 1 + $hasuserreportcell + count($extrafields);
+        $showlastgradedate = $this->get_pref('showlastgradedate');
+ 
+        $colspan = 1 + $hasuserreportcell + count($extrafields) + $showlastgradedate;
 
         $levels = count($this->gtree->levels) - 1;
 
@@ -707,6 +709,16 @@ class grade_report_grader extends grade_report {
             $fieldheader->text = $arrows[$field];
 
             $headerrow->cells[] = $fieldheader;
+        }
+
+        if($showlastgradedate){
+            $gradedateheader = new html_table_cell();
+            $gradedateheader->header = true;
+            $gradedateheader->id = 'gradedateheader';
+            $gradedateheader->scope = 'col';
+            $gradedateheader->text = 'Last Grade Date';
+            $gradedateheader->attributes['class'] = 'header';
+            $headerrow->cells[] = $gradedateheader;
         }
 
         $rows[] = $headerrow;
@@ -784,6 +796,42 @@ class grade_report_grader extends grade_report {
                 $fieldcell->header = false;
                 $fieldcell->text = s($user->{$field});
                 $userrow->cells[] = $fieldcell;
+            }
+
+            if($showlastgradedate){
+                $gradedatecell = new html_table_cell();
+                $gradedatecell->text = '-';
+                $usergrades = $this->grades[$userid];
+                // we only want were item type of grade_item is not course, the dates will be same because course is graded when mod is graded but we need to which which mod type was used.
+                $usergrades = array_filter($usergrades, function ($grade) {
+                    return $grade->grade_item->itemtype != 'course';
+                });
+                $sort =  function ($a, $b) {
+                    $agraded = $a->get_dategraded();
+                    $bgraded = $b->get_dategraded();
+                    if ($agraded === $bgraded) {
+                        return 0;
+                    }
+                    return $agraded < $bgraded ? 1 : -1;
+                };
+                if (usort($usergrades, $sort)) {
+                    $lastgrade = reset($usergrades);
+                    $timestamp = $lastgrade->get_dategraded();
+                    if ($timestamp) {
+                        $text = "<div>" . userdate($timestamp, get_string('strftimedatetime', 'core_langconfig')) . "</div>";
+    
+                        $modulename = get_string('modulename', $lastgrade->grade_item->itemmodule);
+    
+                        $activityicon = $OUTPUT->pix_icon('icon', $modulename, $lastgrade->grade_item->itemmodule, array('class' => 'icon'));
+    
+                        $text .= $activityicon . html_writer::link(
+                            "$CFG->wwwroot/mod/" . $lastgrade->grade_item->itemmodule . "/view.php?id=" . $lastgrade->grade_item->iteminstance,
+                            format_string($lastgrade->grade_item->itemname)
+                        );
+                        $gradedatecell->text = $text;
+                    }
+                }
+                $userrow->cells[] = $gradedatecell;
             }
 
             $userrow->attributes['data-uid'] = $userid;

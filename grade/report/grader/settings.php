@@ -112,5 +112,7 @@ if ($ADMIN->fulltree) {
                                                      '3' => '3',
                                                      '4' => '4',
                                                      '5' => '5')));
+    $settings->add(new admin_setting_configcheckbox('grade_report_showlastgradedate', get_string('showlastgradedate', 'grades'),
+                                                get_string('showlastgradedate_help', 'grades'), 0));
 
 }
